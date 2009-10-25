@@ -85,10 +85,10 @@ namespace :qdeploy do
   task :update => "vlad:update"
   task :config
   task :prepare
-  task :restart => "remote:mod_rails:restart"
+  task :restart => "mod_rails:restart"
   task :cleanup
 end
-task :deploy => %w/qdeploy:update qdeploy:config qdeploy:prepare qdeploy:restart qdeploy:cleanup/
+task :qdeploy => %w/qdeploy:update qdeploy:config qdeploy:prepare qdeploy:restart qdeploy:cleanup/
 
 # LOAD VLAD
 Vlad.load :scm => :git, :app => nil, :web => nil
