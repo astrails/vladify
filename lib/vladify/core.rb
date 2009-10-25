@@ -72,7 +72,7 @@ namespace :deploy do
   # configure. should not interfere with the running code
   task :config
   # stuff to do just before restarting.
-  task :prepare  = %w/vlad:migrate/
+  task :prepare => %w/vlad:migrate/
   # restart all the services
   task :restart => %w/mod_rails:restart/
   # cleanup
