@@ -78,7 +78,7 @@ namespace :deploy do
   # cleanup
   task :cleanup => %w/vlad:cleanup/
 end
-task :deploy => %w/deploy:update deploy:config deploy:prepare deploy:restart deployt:cleanup/
+task :deploy => %w/deploy:update deploy:config deploy:prepare deploy:restart deploy:cleanup/
 
 # fast deploy sequence
 namespace :qdeploy do
