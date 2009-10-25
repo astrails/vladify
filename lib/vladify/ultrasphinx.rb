@@ -15,5 +15,9 @@ namespace :remote do
     end
   end
 end
-$config_tasks  << "remote:sphinx:config"
-$restart_tasks << "remote:sphinx:rebuild"
+
+namespace :deploy do
+  # "prepare" since we migh need migrations
+  task :prepare  => "remote:sphinx:config"
+  task :restart => "remote:sphinx:rebuild"
+end

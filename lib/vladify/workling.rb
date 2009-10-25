@@ -18,3 +18,7 @@ namespace :remote do
     end
   end
 end
+
+namespace :deploy do
+  task :restart => "remote:workling:restart"
+end

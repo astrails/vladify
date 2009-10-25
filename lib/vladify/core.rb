@@ -65,18 +65,30 @@ namespace :git do
   end
 end
 
+# regular deploy sequence
+namespace :deploy do
+  # update new sources, (links 'current')
+  task :update => %w/git:push vlad:update/
+  # configure. should not interfere with the running code
+  task :config
+  # stuff to do just before restarting.
+  task :prepare  = %w/vlad:migrate/
+  # restart all the services
+  task :restart => %w/mod_rails:restart/
+  # cleanup
+  task :cleanup => %w/vlad:cleanup/
+end
+task :deploy => %w/deploy:update deploy:config deploy:prepare deploy:restart deployt:cleanup/
 
+# fast deploy sequence
+namespace :qdeploy do
+  task :update => "vlad:update"
+  task :config
+  task :prepare
+  task :restart => "remote:mod_rails:restart"
+  task :cleanup
+end
+task :deploy => %w/qdeploy:update qdeploy:config qdeploy:prepare qdeploy:restart qdeploy:cleanup/
 
-$update_tasks  = %w/git:push vlad:update/
-$config_tasks  = %w/vlad:migrate/
-$restart_tasks = %w/mod_rails:restart/
-$cleanup_tasks = %w/vlad:cleanup/
-$qdeploy_tasks = %w/vlad:update remote:mod_rails:restart/
-
-set(:deploy_tasks) {$update_tasks + $config_tasks + $restart_tasks + $cleanup_tasks}
-set(:qdeploy_tasks) {$qdeploy_tasks}
-
-task(:deploy)  {  deploy_tasks.each {|t| Rake::Task[t].invoke} }
-task(:qdeploy) { qdeploy_tasks.each {|t| Rake::Task[t].invoke} }
-
+# LOAD VLAD
 Vlad.load :scm => :git, :app => nil, :web => nil

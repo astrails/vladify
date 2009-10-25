@@ -1,7 +1,7 @@
 namespace :dj do
   %w/start stop restart/.each do |c|
     desc "#{c} delayed_job"
-    task c do
+    task c.to_sym do
       system("RAILS_ENV=#{RAILS_ENV} script/delayed_job #{c}") || fail("Failed to #{c} delayed_job")
     end
   end
@@ -18,4 +18,6 @@ namespace :remote do
   end
 end
 
-deploy_extra_tasks << "remote:dj:stop" << "remote:dj:start"
+namespace :deploy do
+  task :restart => "remote:dj:stop remote:dj:start"
+end

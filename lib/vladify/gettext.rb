@@ -5,3 +5,7 @@ namespace :remote do
     end
   end
 end
+
+namespace :prepare do
+  task :config => "remote:gettext:mo"
+end
