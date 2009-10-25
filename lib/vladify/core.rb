@@ -65,9 +65,16 @@ namespace :git do
   end
 end
 
-set :deploy_extra_tasks, []
-set(:deploy_tasks) {%w/git:push vlad:update vlad:migrate mod_rails:restart/ + deploy_extra_tasks + %w/vlad:cleanup/}
-set(:qdeploy_tasks) {%w/vlad:update remote:mod_rails:restart/ + deploy_extra_tasks}
+
+
+$update_tasks  = %w/git:push vlad:update/
+$config_tasks  = %w/vlad:migrate/
+$restart_tasks = %w/mod_rails:restart/
+$cleanup_tasks = %w/vlad:cleanup/
+$qdeploy_tasks = %w/vlad:update remote:mod_rails:restart/
+
+set(:deploy_tasks) {$update_tasks + $config_tasks + $restart_tasks + $cleanup_tasks}
+set(:qdeploy_tasks) {$qdeploy_tasks}
 
 task(:deploy)  {  deploy_tasks.each {|t| Rake::Task[t].invoke} }
 task(:qdeploy) { qdeploy_tasks.each {|t| Rake::Task[t].invoke} }
