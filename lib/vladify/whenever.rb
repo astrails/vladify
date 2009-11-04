@@ -15,5 +15,5 @@ namespace :remote do
 end
 
 namespace :deploy do
-  task :restart => "remote:cron:update"
+  task :restart => "remote:crontab:update"
 end
