@@ -9,15 +9,15 @@ end
 namespace :gettext do
   desc "sync locales .yml file to db"
   task :yml => :environment do
-    locales_path = File.join(Rails.root, "config/locales/en.yml"))
-    if File.exists?(locales_path)
-      messages = gettext_flatten_locales_hash(YAML.load(File.read(locales_path)))
+    I18n.load_path.flatten.each do |filename|
+      next unless File.exists?(filename)
+      messages = gettext_flatten_locales_hash(YAML.load(File.read(filename)))
       messages.each do |k, v|
         unless key = TranslationKey.find_by_key(k.to_json)
           puts "new error message key: #{k}"
 
           TranslationKey.create(:key_value => k,
-            :translations_attributes => AVAILABLE_LOCALES.map {|loc| {:locale => loc, :text => nil}})
+            :translations_attributes => AVAILABLE_LOCALES.map {|loc| {:locale => loc, :text => v}})
         end
       end
     end
@@ -30,8 +30,8 @@ namespace :remote do
     remote_task :sync do
       # only need to do it on one of the :app hosts
       break unless target_host == Rake::RemoteTask.hosts_for(:app).first
-      Rake::Task["gettext:yml"].invoke
-      Rake::Task["gettext:sync"].invoke
+      run rake "gettext:yml"
+      run rake "gettext:sync"
     end
   end
 end
