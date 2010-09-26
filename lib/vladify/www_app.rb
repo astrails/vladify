@@ -2,7 +2,7 @@ namespace :remote do
   namespace :www_app do
     desc "start the app with first request"
     remote_task :request do
-      run "curl http://www.#{domain.split(/@/).last}/"
+      run "curl -I http://www.#{domain.split(/@/).last}/"
     end
   end
 end
