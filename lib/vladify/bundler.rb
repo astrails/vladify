@@ -3,7 +3,7 @@ ln_shared << ".bundle"
 namespace :bundle do
   desc "install bundled gems"
   task :install do
-    run "bundle install --without test"
+    run "bundle install --without test development"
   end
 end
 
