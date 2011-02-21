@@ -17,4 +17,8 @@ namespace :remote do
   end
 end
 
-Rake::Task["vlad:update_symlinks"].prerequisites << "remote:bundle:install"
+namespace :vlad do
+  remote_task :update_symlinks, :roles => :app do
+    Rake::Task['remote:bundle:install'].invoke
+  end
+end
